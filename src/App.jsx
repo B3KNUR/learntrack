@@ -64,7 +64,10 @@ function App() {
             path="/courses/:courseId"
             element={<CourseDetailsPage user={user} />}
           />
-          <Route path="/lessons/:lessonId" element={<LessonPage />} />
+          <Route
+            path="/lessons/:lessonId"
+            element={<LessonPage user={user} />}
+          />
           <Route
             path="/profile"
             element={

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getUserEnrollments } from '../services/enrollmentService'
+import { getCourseProgress } from '../services/lessonService'
 
 function DashboardPage({ user }) {
   const [enrolledCourses, setEnrolledCourses] = useState([])
@@ -9,6 +10,9 @@ function DashboardPage({ user }) {
 
   useEffect(() => {
     async function loadEnrollments() {
+      setLoading(true)
+      setErrorMessage('')
+
       if (!user) {
         setLoading(false)
         return
@@ -19,7 +23,18 @@ function DashboardPage({ user }) {
       if (error) {
         setErrorMessage(error.message)
       } else {
-        setEnrolledCourses(data)
+        const coursesWithProgress = await Promise.all(
+          data.map(async (course) => {
+            const progress = await getCourseProgress(user.id, course.id)
+
+            return {
+              ...course,
+              progress,
+            }
+          }),
+        )
+
+        setEnrolledCourses(coursesWithProgress)
       }
 
       setLoading(false)
@@ -50,7 +65,13 @@ function DashboardPage({ user }) {
             <h2>{course.title}</h2>
             <p>{course.description}</p>
             <span className="level-badge">{course.level}</span>
-            <p className="progress-text">Progress: 0%</p>
+            <p className="progress-text">
+              Progress: {course.progress.percentage}%
+            </p>
+            <p className="progress-text">
+              Completed lessons: {course.progress.completedLessons} /{' '}
+              {course.progress.totalLessons}
+            </p>
             <Link className="text-link" to={`/courses/${course.id}`}>
               View course
             </Link>

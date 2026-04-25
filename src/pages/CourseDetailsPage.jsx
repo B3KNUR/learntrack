@@ -8,6 +8,10 @@ import {
   enrollInCourse,
   getEnrollment,
 } from '../services/enrollmentService'
+import {
+  getCompletedLessons,
+  getCourseProgress,
+} from '../services/lessonService'
 
 function groupLessonsByModule(lessons) {
   return lessons.reduce((modules, lesson) => {
@@ -27,10 +31,13 @@ function CourseDetailsPage({ user }) {
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [enrollment, setEnrollment] = useState(null)
+  const [completedLessonIds, setCompletedLessonIds] = useState([])
+  const [progress, setProgress] = useState(null)
   const [loading, setLoading] = useState(true)
   const [enrollmentLoading, setEnrollmentLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [enrollmentError, setEnrollmentError] = useState('')
+  const [progressError, setProgressError] = useState('')
 
   useEffect(() => {
     async function loadCourseDetails() {
@@ -88,6 +95,37 @@ function CourseDetailsPage({ user }) {
     loadEnrollment()
   }, [courseId, user])
 
+  useEffect(() => {
+    async function loadProgress() {
+      setProgress(null)
+      setCompletedLessonIds([])
+      setProgressError('')
+
+      if (!user) {
+        return
+      }
+
+      const courseProgress = await getCourseProgress(user.id, courseId)
+
+      if (courseProgress.error) {
+        setProgressError(courseProgress.error.message)
+        return
+      }
+
+      setProgress(courseProgress)
+
+      const { data, error } = await getCompletedLessons(user.id)
+
+      if (error) {
+        setProgressError(error.message)
+      } else {
+        setCompletedLessonIds(data.map((row) => row.lesson_id))
+      }
+    }
+
+    loadProgress()
+  }, [courseId, user])
+
   async function handleEnroll() {
     setEnrollmentError('')
     setEnrollmentLoading(true)
@@ -143,6 +181,18 @@ function CourseDetailsPage({ user }) {
             )}
           </div>
 
+          {user && progress && (
+            <div className="progress-box">
+              <p>Progress: {progress.percentage}%</p>
+              <p>
+                Completed lessons: {progress.completedLessons} /{' '}
+                {progress.totalLessons}
+              </p>
+            </div>
+          )}
+
+          {progressError && <p className="error-message">{progressError}</p>}
+
           <div className="modules">
             {Object.entries(lessonsByModule).map(([moduleTitle, moduleLessons]) => (
               <section className="module-section" key={moduleTitle}>
@@ -151,6 +201,9 @@ function CourseDetailsPage({ user }) {
                 <ul className="lesson-list">
                   {moduleLessons.map((lesson) => (
                     <li key={lesson.id}>
+                      {completedLessonIds.includes(lesson.id) && (
+                        <span className="completed-indicator">✓</span>
+                      )}
                       <Link to={`/lessons/${lesson.id}`}>{lesson.title}</Link>
                     </li>
                   ))}

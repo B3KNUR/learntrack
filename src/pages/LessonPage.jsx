@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import AIAssistant from '../components/AIAssistant'
 import {
   getLessonById,
   isLessonCompleted,
@@ -149,6 +150,8 @@ function LessonPage({ user }) {
               <p className="error-message">{completionError}</p>
             )}
           </div>
+
+          <AIAssistant lesson={lesson} />
         </div>
       )}
     </section>

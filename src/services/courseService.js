@@ -22,3 +22,25 @@ export async function getLessonsByCourseId(courseId) {
     .eq('course_id', courseId)
     .order('lesson_order', { ascending: true })
 }
+
+export async function getAllLessons() {
+  return supabase
+    .from('lessons')
+    .select(
+      `
+        id,
+        course_id,
+        module_title,
+        title,
+        description,
+        video_url,
+        practice_instructions,
+        lesson_order,
+        courses (
+          title
+        )
+      `,
+    )
+    .order('course_id', { ascending: true })
+    .order('lesson_order', { ascending: true })
+}

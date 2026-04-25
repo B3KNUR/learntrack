@@ -38,6 +38,11 @@ button:hover {
   background-color: #1d4ed8;
 }
 
+button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
 .app {
   min-height: 100vh;
 }
@@ -77,6 +82,22 @@ button:hover {
   background-color: #eff6ff;
 }
 
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-menu span {
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.user-menu button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
 .main-content {
   width: min(900px, 100%);
   margin: 0 auto;
@@ -106,6 +127,57 @@ button:hover {
   color: #4b5563;
 }
 
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, 100%);
+  margin: 28px auto 0;
+  text-align: left;
+}
+
+.auth-form label {
+  font-weight: 700;
+  color: #374151;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.auth-form input:focus {
+  border-color: #2563eb;
+  outline: 2px solid #bfdbfe;
+}
+
+.auth-form button {
+  margin-top: 8px;
+}
+
+.page-card .error-message,
+.page-card .success-message,
+.page-card .user-email,
+.page-card .page-link {
+  margin-top: 18px;
+}
+
+.error-message {
+  color: #b91c1c;
+}
+
+.success-message {
+  color: #047857;
+}
+
+.page-link a {
+  color: #2563eb;
+  font-weight: 700;
+}
+
 @media (max-width: 700px) {
   .navbar {
     align-items: flex-start;
@@ -123,5 +195,10 @@ button:hover {
 
   .page-card h1 {
     font-size: 28px;
+  }
+
+  .user-menu {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

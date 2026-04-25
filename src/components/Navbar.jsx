@@ -1,6 +1,15 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { signOut } from '../services/authService'
 
-function Navbar() {
+function Navbar({ user, setUser }) {
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await signOut()
+    setUser(null)
+    navigate('/login')
+  }
+
   return (
     <header className="navbar">
       <Link className="site-logo" to="/">
@@ -13,8 +22,17 @@ function Navbar() {
         <NavLink to="/dashboard">Dashboard</NavLink>
         <NavLink to="/profile">Profile</NavLink>
         <NavLink to="/admin">Admin</NavLink>
-        <NavLink to="/login">Login</NavLink>
+        {!user && <NavLink to="/login">Login</NavLink>}
       </nav>
+
+      {user && (
+        <div className="user-menu">
+          <span>{user.email}</span>
+          <button type="button" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      )}
     </header>
   )
 }

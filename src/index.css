@@ -179,6 +179,25 @@ button:disabled {
   font-weight: 700;
 }
 
+.status-message a,
+.enrollment-box a {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.enrollment-box {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background-color: #eff6ff;
+}
+
+.progress-text {
+  font-weight: 700;
+  color: #374151;
+}
+
 .course-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

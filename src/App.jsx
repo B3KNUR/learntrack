@@ -60,7 +60,10 @@ function App() {
             }
           />
           <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/courses/:courseId" element={<CourseDetailsPage />} />
+          <Route
+            path="/courses/:courseId"
+            element={<CourseDetailsPage user={user} />}
+          />
           <Route path="/lessons/:lessonId" element={<LessonPage />} />
           <Route
             path="/profile"

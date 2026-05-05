@@ -5,6 +5,7 @@ import { signUp } from '../services/authService'
 function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')  // новое
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,6 +18,11 @@ function SignupPage() {
     if (password.length < 8) {
       setErrorMessage('Password must be at least 8 characters.')
       return
+    }
+
+    if (password !== confirmPassword) {          // новое
+      setErrorMessage('Passwords do not match.') // новое
+      return                                     // новое
     }
 
     setLoading(true)
@@ -32,6 +38,7 @@ function SignupPage() {
 
     setEmail('')
     setPassword('')
+    setConfirmPassword('')  // новое
     setSuccessMessage('Account created successfully. You are now logged in.')
   }
 
@@ -57,6 +64,16 @@ function SignupPage() {
           minLength="8"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          required
+        />
+
+        <label htmlFor="signup-confirm-password">Confirm Password</label>
+        <input
+          id="signup-confirm-password"
+          type="password"
+          minLength="8"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
           required
         />
 

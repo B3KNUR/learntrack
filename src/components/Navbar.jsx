@@ -23,6 +23,7 @@ function Navbar({ user, setUser }) {
         <NavLink to="/profile">Profile</NavLink>
         <NavLink to="/admin">Admin</NavLink>
         {!user && <NavLink to="/login">Login</NavLink>}
+        {!user && <NavLink to="/signup">Signup</NavLink>}
       </nav>
 
       {user && (

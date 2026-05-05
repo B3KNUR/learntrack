@@ -5,7 +5,7 @@ import { signUp } from '../services/authService'
 function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')  // новое
+  const [confirmPassword, setConfirmPassword] = useState('')  
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,9 +20,9 @@ function SignupPage() {
       return
     }
 
-    if (password !== confirmPassword) {          // новое
-      setErrorMessage('Passwords do not match.') // новое
-      return                                     // новое
+    if (password !== confirmPassword) {          
+      setErrorMessage('Passwords do not match.') 
+      return                                     
     }
 
     setLoading(true)

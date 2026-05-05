@@ -24,7 +24,7 @@ function CoursesPage() {
   }, [])
 
   return (
-    <section className="page-card">
+    <section className="page-card courses-page">
       <h1>Courses</h1>
       <p>Browse available courses and choose what you want to learn.</p>
 
@@ -41,7 +41,7 @@ function CoursesPage() {
             <h2>{course.title}</h2>
             <p>{course.description}</p>
             <span className="level-badge">{course.level}</span>
-            <Link className="text-link" to={`/courses/${course.id}`}>
+            <Link className="button button-secondary" to={`/courses/${course.id}`}>
               View course
             </Link>
           </article>

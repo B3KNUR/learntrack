@@ -239,55 +239,182 @@ function AdminPage({ user }) {
   return (
     <section className="page-card admin-page">
       <h1>Admin Panel</h1>
-      <p>Manage LearnTrack courses and lessons.</p>
+      <p>Use this panel to manage courses and lessons stored in Supabase.</p>
+
+      <div className="admin-summary">
+        <article className="admin-card">
+          <span className="admin-summary-label">Total courses</span>
+          <strong>{courses.length}</strong>
+        </article>
+
+        <article className="admin-card">
+          <span className="admin-summary-label">Total lessons</span>
+          <strong>{lessons.length}</strong>
+        </article>
+
+        <article className="admin-card">
+          <span className="admin-summary-label">Role</span>
+          <strong>Admin</strong>
+        </article>
+      </div>
 
       {message && <p className="success-message">{message}</p>}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
+      <div className="admin-grid">
+        <section className="admin-section">
+          <h2>Create Course</h2>
+          <p className="admin-helper">Add a new course for students to browse.</p>
+
+          <form className="admin-form" onSubmit={handleCreateCourse}>
+            <label>
+              Title
+              <input
+                type="text"
+                value={courseForm.title}
+                onChange={(event) =>
+                  updateCourseForm('title', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Description
+              <textarea
+                value={courseForm.description}
+                onChange={(event) =>
+                  updateCourseForm('description', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Level
+              <input
+                type="text"
+                value={courseForm.level}
+                onChange={(event) =>
+                  updateCourseForm('level', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <button type="submit">Create course</button>
+          </form>
+        </section>
+
+        <section className="admin-section">
+          <h2>Create Lesson</h2>
+          <p className="admin-helper">Attach a lesson to an existing course.</p>
+
+          <form className="admin-form" onSubmit={handleCreateLesson}>
+            <label>
+              Course
+              <select
+                value={lessonForm.course_id}
+                onChange={(event) =>
+                  updateLessonForm('course_id', event.target.value)
+                }
+                required
+              >
+                <option value="">Select a course</option>
+                {courses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Module title
+              <input
+                type="text"
+                value={lessonForm.module_title}
+                onChange={(event) =>
+                  updateLessonForm('module_title', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Title
+              <input
+                type="text"
+                value={lessonForm.title}
+                onChange={(event) =>
+                  updateLessonForm('title', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Description
+              <textarea
+                value={lessonForm.description}
+                onChange={(event) =>
+                  updateLessonForm('description', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <label>
+              Video URL
+              <input
+                type="url"
+                value={lessonForm.video_url}
+                onChange={(event) =>
+                  updateLessonForm('video_url', event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Practice instructions
+              <textarea
+                value={lessonForm.practice_instructions}
+                onChange={(event) =>
+                  updateLessonForm('practice_instructions', event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Lesson order
+              <input
+                type="number"
+                min="1"
+                value={lessonForm.lesson_order}
+                onChange={(event) =>
+                  updateLessonForm('lesson_order', event.target.value)
+                }
+                required
+              />
+            </label>
+
+            <button type="submit">Create lesson</button>
+          </form>
+        </section>
+      </div>
+
       <section className="admin-section">
-        <h2>Create Course</h2>
-        <form className="admin-form" onSubmit={handleCreateCourse}>
-          <label>
-            Title
-            <input
-              type="text"
-              value={courseForm.title}
-              onChange={(event) => updateCourseForm('title', event.target.value)}
-              required
-            />
-          </label>
-
-          <label>
-            Description
-            <textarea
-              value={courseForm.description}
-              onChange={(event) =>
-                updateCourseForm('description', event.target.value)
-              }
-              required
-            />
-          </label>
-
-          <label>
-            Level
-            <input
-              type="text"
-              value={courseForm.level}
-              onChange={(event) => updateCourseForm('level', event.target.value)}
-              required
-            />
-          </label>
-
-          <button type="submit">Create course</button>
-        </form>
-      </section>
-
-      <section className="admin-section">
-        <h2>Manage Courses</h2>
+        <div className="admin-section-header">
+          <div>
+            <h2>Manage Courses</h2>
+            <p className="admin-helper">Edit course names, descriptions, and levels.</p>
+          </div>
+          <span>{courses.length} courses</span>
+        </div>
 
         <div className="admin-list">
           {courses.map((course) => (
-            <article className="admin-item" key={course.id}>
+            <article className="admin-item admin-card" key={course.id}>
               <label>
                 Title
                 <input
@@ -342,103 +469,17 @@ function AdminPage({ user }) {
       </section>
 
       <section className="admin-section">
-        <h2>Create Lesson</h2>
-        <form className="admin-form" onSubmit={handleCreateLesson}>
-          <label>
-            Course
-            <select
-              value={lessonForm.course_id}
-              onChange={(event) =>
-                updateLessonForm('course_id', event.target.value)
-              }
-              required
-            >
-              <option value="">Select a course</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.title}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            Module title
-            <input
-              type="text"
-              value={lessonForm.module_title}
-              onChange={(event) =>
-                updateLessonForm('module_title', event.target.value)
-              }
-              required
-            />
-          </label>
-
-          <label>
-            Title
-            <input
-              type="text"
-              value={lessonForm.title}
-              onChange={(event) => updateLessonForm('title', event.target.value)}
-              required
-            />
-          </label>
-
-          <label>
-            Description
-            <textarea
-              value={lessonForm.description}
-              onChange={(event) =>
-                updateLessonForm('description', event.target.value)
-              }
-              required
-            />
-          </label>
-
-          <label>
-            Video URL
-            <input
-              type="url"
-              value={lessonForm.video_url}
-              onChange={(event) =>
-                updateLessonForm('video_url', event.target.value)
-              }
-            />
-          </label>
-
-          <label>
-            Practice instructions
-            <textarea
-              value={lessonForm.practice_instructions}
-              onChange={(event) =>
-                updateLessonForm('practice_instructions', event.target.value)
-              }
-            />
-          </label>
-
-          <label>
-            Lesson order
-            <input
-              type="number"
-              min="1"
-              value={lessonForm.lesson_order}
-              onChange={(event) =>
-                updateLessonForm('lesson_order', event.target.value)
-              }
-              required
-            />
-          </label>
-
-          <button type="submit">Create lesson</button>
-        </form>
-      </section>
-
-      <section className="admin-section">
-        <h2>Manage Lessons</h2>
+        <div className="admin-section-header">
+          <div>
+            <h2>Manage Lessons</h2>
+            <p className="admin-helper">Update lesson content and lesson order.</p>
+          </div>
+          <span>{lessons.length} lessons</span>
+        </div>
 
         <div className="admin-list">
           {lessons.map((lesson) => (
-            <article className="admin-item" key={lesson.id}>
+            <article className="admin-item admin-card" key={lesson.id}>
               <p className="admin-muted">
                 Course: {lesson.courses?.title || lesson.course_id}
               </p>

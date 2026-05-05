@@ -34,6 +34,7 @@ function AdminPage({ user }) {
   const [lessonForm, setLessonForm] = useState(emptyLessonForm)
   const [courseEdits, setCourseEdits] = useState({})
   const [lessonEdits, setLessonEdits] = useState({})
+  const [editingLessonId, setEditingLessonId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
@@ -113,6 +114,14 @@ function AdminPage({ user }) {
         [field]: value,
       },
     })
+  }
+
+  function cancelLessonEdit(lesson) {
+    setLessonEdits({
+      ...lessonEdits,
+      [lesson.id]: createLessonEditValues(lesson),
+    })
+    setEditingLessonId(null)
   }
 
   async function handleCreateCourse(event) {
@@ -201,6 +210,7 @@ function AdminPage({ user }) {
     }
 
     setMessage('Lesson updated successfully.')
+    setEditingLessonId(null)
     await loadAdminData()
   }
 
@@ -216,6 +226,7 @@ function AdminPage({ user }) {
     }
 
     setMessage('Lesson deleted successfully.')
+    setEditingLessonId(null)
     await loadAdminData()
   }
 
@@ -480,119 +491,170 @@ function AdminPage({ user }) {
         <div className="admin-list">
           {lessons.map((lesson) => (
             <article className="admin-item admin-card" key={lesson.id}>
-              <p className="admin-muted">
-                Course: {lesson.courses?.title || lesson.course_id}
-              </p>
+              {editingLessonId !== lesson.id && (
+                <>
+                  <div className="lesson-compact">
+                    <div>
+                      <p className="admin-muted">
+                        {lesson.courses?.title || lesson.course_id}
+                      </p>
+                      <h3>{lesson.title}</h3>
+                      <p>{lesson.module_title}</p>
+                    </div>
+                    <span>Order {lesson.lesson_order}</span>
+                  </div>
 
-              <label>
-                Course
-                <select
-                  value={lessonEdits[lesson.id]?.course_id ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(lesson.id, 'course_id', event.target.value)
-                  }
-                >
-                  {courses.map((course) => (
-                    <option key={course.id} value={course.id}>
-                      {course.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <div className="admin-actions">
+                    <button
+                      type="button"
+                      onClick={() => setEditingLessonId(lesson.id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="danger-button"
+                      type="button"
+                      onClick={() => handleDeleteLesson(lesson.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
 
-              <label>
-                Module title
-                <input
-                  type="text"
-                  value={lessonEdits[lesson.id]?.module_title ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(
-                      lesson.id,
-                      'module_title',
-                      event.target.value,
-                    )
-                  }
-                />
-              </label>
+              {editingLessonId === lesson.id && (
+                <>
+                  <p className="admin-muted">
+                    Editing: {lesson.courses?.title || lesson.course_id}
+                  </p>
 
-              <label>
-                Title
-                <input
-                  type="text"
-                  value={lessonEdits[lesson.id]?.title ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(lesson.id, 'title', event.target.value)
-                  }
-                />
-              </label>
+                  <label>
+                    Course
+                    <select
+                      value={lessonEdits[lesson.id]?.course_id ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'course_id',
+                          event.target.value,
+                        )
+                      }
+                    >
+                      {courses.map((course) => (
+                        <option key={course.id} value={course.id}>
+                          {course.title}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
 
-              <label>
-                Description
-                <textarea
-                  value={lessonEdits[lesson.id]?.description ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(
-                      lesson.id,
-                      'description',
-                      event.target.value,
-                    )
-                  }
-                />
-              </label>
+                  <label>
+                    Module title
+                    <input
+                      type="text"
+                      value={lessonEdits[lesson.id]?.module_title ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'module_title',
+                          event.target.value,
+                        )
+                      }
+                    />
+                  </label>
 
-              <label>
-                Video URL
-                <input
-                  type="url"
-                  value={lessonEdits[lesson.id]?.video_url ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(lesson.id, 'video_url', event.target.value)
-                  }
-                />
-              </label>
+                  <label>
+                    Title
+                    <input
+                      type="text"
+                      value={lessonEdits[lesson.id]?.title ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(lesson.id, 'title', event.target.value)
+                      }
+                    />
+                  </label>
 
-              <label>
-                Practice instructions
-                <textarea
-                  value={lessonEdits[lesson.id]?.practice_instructions ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(
-                      lesson.id,
-                      'practice_instructions',
-                      event.target.value,
-                    )
-                  }
-                />
-              </label>
+                  <label>
+                    Description
+                    <textarea
+                      value={lessonEdits[lesson.id]?.description ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'description',
+                          event.target.value,
+                        )
+                      }
+                    />
+                  </label>
 
-              <label>
-                Lesson order
-                <input
-                  type="number"
-                  min="1"
-                  value={lessonEdits[lesson.id]?.lesson_order ?? ''}
-                  onChange={(event) =>
-                    updateLessonEdit(
-                      lesson.id,
-                      'lesson_order',
-                      event.target.value,
-                    )
-                  }
-                />
-              </label>
+                  <label>
+                    Video URL
+                    <input
+                      type="url"
+                      value={lessonEdits[lesson.id]?.video_url ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'video_url',
+                          event.target.value,
+                        )
+                      }
+                    />
+                  </label>
 
-              <div className="admin-actions">
-                <button type="button" onClick={() => handleUpdateLesson(lesson.id)}>
-                  Save
-                </button>
-                <button
-                  className="danger-button"
-                  type="button"
-                  onClick={() => handleDeleteLesson(lesson.id)}
-                >
-                  Delete
-                </button>
-              </div>
+                  <label>
+                    Practice instructions
+                    <textarea
+                      value={
+                        lessonEdits[lesson.id]?.practice_instructions ?? ''
+                      }
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'practice_instructions',
+                          event.target.value,
+                        )
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Lesson order
+                    <input
+                      type="number"
+                      min="1"
+                      value={lessonEdits[lesson.id]?.lesson_order ?? ''}
+                      onChange={(event) =>
+                        updateLessonEdit(
+                          lesson.id,
+                          'lesson_order',
+                          event.target.value,
+                        )
+                      }
+                    />
+                  </label>
+
+                  <div className="admin-actions">
+                    <button
+                      type="button"
+                      onClick={() => handleUpdateLesson(lesson.id)}
+                    >
+                      Save
+                    </button>
+                    <button type="button" onClick={() => cancelLessonEdit(lesson)}>
+                      Cancel
+                    </button>
+                    <button
+                      className="danger-button"
+                      type="button"
+                      onClick={() => handleDeleteLesson(lesson.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
             </article>
           ))}
         </div>
@@ -619,18 +681,22 @@ function createLessonEditState(lessons) {
   const editState = {}
 
   lessons.forEach((lesson) => {
-    editState[lesson.id] = {
-      course_id: lesson.course_id || '',
-      module_title: lesson.module_title || '',
-      title: lesson.title || '',
-      description: lesson.description || '',
-      video_url: lesson.video_url || '',
-      practice_instructions: lesson.practice_instructions || '',
-      lesson_order: lesson.lesson_order ?? '',
-    }
+    editState[lesson.id] = createLessonEditValues(lesson)
   })
 
   return editState
+}
+
+function createLessonEditValues(lesson) {
+  return {
+    course_id: lesson.course_id || '',
+    module_title: lesson.module_title || '',
+    title: lesson.title || '',
+    description: lesson.description || '',
+    video_url: lesson.video_url || '',
+    practice_instructions: lesson.practice_instructions || '',
+    lesson_order: lesson.lesson_order ?? '',
+  }
 }
 
 export default AdminPage

@@ -760,6 +760,33 @@ button:disabled {
   font-weight: 700;
 }
 
+.lesson-compact {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lesson-compact h3 {
+  margin: 4px 0;
+  color: #111827;
+  font-size: 20px;
+}
+
+.lesson-compact p {
+  font-size: 15px;
+}
+
+.lesson-compact span {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #374151;
+  background-color: #f3f4f6;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 @media (max-width: 700px) {
   .navbar {
     align-items: flex-start;
@@ -790,6 +817,10 @@ button:disabled {
   }
 
   .admin-section-header {
+    flex-direction: column;
+  }
+
+  .lesson-compact {
     flex-direction: column;
   }
 

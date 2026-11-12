@@ -1,3 +1,5 @@
+This is a repository for practicing the GitHub workflow: issues, pull requests and CI.
+
 # LearnTrack
 
 **Live Demo:** https://learntrackfinal.vercel.app
